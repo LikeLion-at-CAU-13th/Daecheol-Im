@@ -12,6 +12,7 @@ class BaseModel(models.Model): # models.Model을 상속받음
 
 class Category(models.Model): # 카테고리 기능
     name = models.CharField(max_length=30)
+    cat_id = models.AutoField(primary_key=True) # cat pk 추가
 
     def __str__(self):
         return self.name
@@ -28,12 +29,18 @@ class Post(BaseModel): # BaseModel을 상속받음
     content = models.TextField()
     status = models.CharField(max_length=15, choices=CHOICES, default='STORED')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='post')
-    categories = models.ManyToManyField(Category, related_name = 'posts')
 
     def __str__(self):
         return self.title
+
+class PostCategory(models.Model):
+    PC_id = models.AutoField(primary_key=True)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='post_categories')
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='category_posts')
+
     
 class Comment(BaseModel):
+    com_id = models.AutoField(primary_key=True) # comment pk 추가
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
     author_name = models.CharField(max_length=50) # 댓글 단 사람 : 댓글 작성시 입력
     content = models.TextField() # 댓글 내용 입력
