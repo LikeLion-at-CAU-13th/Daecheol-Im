@@ -38,6 +38,30 @@ def get_comment_all(reqeust, post_id): # 인자로 게시글의 id를 받음
         "data": comment_json_list
     })
 
+def posts_by_category(request, category_id):# 인자로 카테고리의 id를 받음
+    category = get_object_or_404(Category, pk=category_id) # Category 클래스에서 pk가 입력받은 인자와 같은 객체를 category에 담음
+
+    post_categories = PostCategory.objects.filter(category=category).order_by('-post__created') # 이 카테고리에 속한 PostCategory들을 최신순 정렬
+
+    post_json_list = []
+    for pc in post_categories:
+        post = pc.post # 해당 PostCategory에 대응하는 Post를 post에 담음
+        post_json_list.append({
+            "id": post.id,
+            "title": post.title,
+            "content": post.content,
+            "status": post.status,
+            "created": post.created,
+            "user": post.user.username,
+            "categories": [cat.category.name for cat in post.post_categories.all()]
+        })
+
+    return JsonResponse({
+        'status': 200,
+        'message': f'"{category.name}" 카테고리의 게시글 목록입니다.',
+        'data': post_json_list
+    })
+
     
 def get_post_detail(reqeust, id):
     post = get_object_or_404(Post, pk=id)
