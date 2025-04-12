@@ -72,7 +72,9 @@ INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware', # 반드시 가장 위쪽에 추가
-    'django.middleware.security.SecurityMiddleware',
+    'posts.logging_middleware.RequestLoggingMiddleware' 
+    #기본 미들웨어
+    'django.middleware.security.SecurityMiddleware', 
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -156,16 +158,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'accounts.User'
 
-MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    # 'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
-
 # 인증 관련 요청(쿠키, 세션 등)을 허용
 # 예를 들어 브라우저가 백엔드 서버로 쿠키를 전송하거나, 백엔드에서 쿠키를 응답으로 보낼 수 있음
 CORS_ALLOW_CREDENTIALS = True
@@ -178,3 +170,49 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
 ]
+
+# 로그 기록
+
+LOG_DIR = os.path.join(BASE_DIR, 'logs') # 로그 파일을 저장할 디렉토리를 BASE_DIR/logs로 설정
+os.makedirs(LOG_DIR, exist_ok=True) # logs 폴더가 없으면 자동 생성
+
+LOGGING = {
+    'version' : 1,
+    'disable_existing_loggers': False,
+    'formatters' : {
+        'standard' : {
+            'format' : '[{asctime}] {levelname} {message}',
+            'style' : '{',
+        },
+        'detailed': {
+            'format': '[{asctime}] {levelname} {name} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'file_all': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(LOG_DIR, 'all_requests.log'),
+            'formatter': 'standard',
+        },
+        'file_errors': {
+            'level': 'WARNING',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(LOG_DIR, 'errors.log'),
+            'formatter': 'detailed',
+        },
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['file_all', 'file_errors'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'django': {
+            'handlers': ['file_all', 'file_errors'],
+            'level': 'INFO',
+            'propagate': False,
+        },   
+    },
+}
