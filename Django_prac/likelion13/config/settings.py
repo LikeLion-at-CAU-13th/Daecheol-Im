@@ -72,7 +72,7 @@ INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware', # 반드시 가장 위쪽에 추가
-    'posts.logging_middleware.RequestLoggingMiddleware' 
+    'posts.logging_middleware.RequestLoggingMiddleware',
     #기본 미들웨어
     'django.middleware.security.SecurityMiddleware', 
     'django.contrib.sessions.middleware.SessionMiddleware',
