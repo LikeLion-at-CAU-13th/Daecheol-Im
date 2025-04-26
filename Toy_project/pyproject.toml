@@ -1,0 +1,21 @@
+[project]
+name = "toy-project"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "limdaecheol",email = "eocjf852963@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "django (>=5.2,<6.0)",
+    "django-cors-headers (>=4.7.0,<5.0.0)"
+]
+
+[tool.poetry]
+packages = [{include = "toy_project", from = "src"}]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
