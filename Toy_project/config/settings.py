@@ -166,4 +166,5 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
     "http://127.0.0.1:5500", # 로컬 개발용
     "http://gun587330.github.io", # GitHub Pages 배포용
+    "http://guesthouse.o-r.kr",
 ]
