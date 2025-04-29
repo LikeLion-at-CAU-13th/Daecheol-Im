@@ -164,4 +164,6 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [ 
     "http://localhost:3000",
     "http://127.0.0.1:3000",
+    "http://127.0.0.1:5500", # 로컬 개발용
+    "http://gun587330.github.io", # GitHub Pages 배포용
 ]
