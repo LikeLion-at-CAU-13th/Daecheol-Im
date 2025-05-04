@@ -1,24 +1,21 @@
-from django.shortcuts import render
 import json
 
-# Create your views here.
-
+#함수형 뷰(FBV)
 from django.shortcuts import render
 from django.http import JsonResponse 
 from django.shortcuts import get_object_or_404 
 from django.views.decorators.http import require_http_methods
 from .models import *
+#클래스형 뷰(CBV)
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from django.http import Http404
+from .serializers import PostSerializer, CommentSerializer
 
-# Create your views here.+
-def hello_world(request):
-    if request.method == "GET":
-        return JsonResponse({
-            'status' : 200,
-            'data' : "Hello lielion-13th!"
-        })
-
+# 함수형 뷰(FBV)로 구현
 # 게시글에 달린 댓글 모두 불러오기
-@require_http_methods(["GET"])
+'''@require_http_methods(["GET"])
 def get_comment_all(reqeust, post_id): # 인자로 게시글의 id를 받음
     post = get_object_or_404(Post, pk=post_id) # Post 클래스에서 pk가 입력받은 인자와 같은 객체를 post에 담음
     comments = Comment.objects.filter(post=post) # Comment의 객체중 post_id가 입력받은 인자와 같은 객체들을 comments에 담음
@@ -200,4 +197,61 @@ def post_detail(request, post_id):
                 'message': '게시글 삭제 성공',
                 'data': None
         })
+    from .serializers import PostSerializer
+'''
+
+# 클래스형 뷰(CBV)로 구현
+# APIView를 사용하기 위해 import
+class PostList(APIView):
+    def post(self, request, format=None):
+        serializer = PostSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    # 게시글 목록 불러오기
+    def get(self, request, format=None):
+        posts = Post.objects.all()
+				# 많은 post들을 받아오려면 (many=True) 써줘야 한다!
+        serializer = PostSerializer(posts, many=True)
+        return Response(serializer.data)
+
+# 게시글 하나 불러오기
+class PostDetail(APIView):
+    def get(self, request, post_id):
+        post = get_object_or_404(Post, id=post_id)
+        serializer = PostSerializer(post)
+        return Response(serializer.data)
+    
+    # 게시글 수정하기
+    def put(self, request, post_id):
+        post = get_object_or_404(Post, id=post_id)
+        serializer = PostSerializer(post, data=request.data)
+        if serializer.is_valid(): # update이니까 유효성 검사 필요
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    # 게시글 삭제하기
+    def delete(self, request, post_id):
+        post = get_object_or_404(Post, id=post_id)
+        post.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+# 해당 게시글에 달린 댓글 모두 조회
+class CommentList(APIView):
+    def get(self, request, post_id): # HTTP GEt 요청이 들어왔을 때 실행되는 메서드
+        post = get_object_or_404(Post, pk=post_id) # Post 클래스에서 pk가 입력받은 인자와 같은 객체를 post에 담음
+        comments = Comment.objects.filter(post = post) # Comment의 객체중 post_id가 입력받은 인자와 같은 객체들을 comments에 담음
+
+        if not comments.exists(): # 댓글이 없다면 '댓글 없음' 출력
+            return Response({
+                "status": 200,
+                "message": "댓글 없음",
+                "data": []
+            })
+        
+        serializer = CommentSerializer(comments, many=True)
+        return Response(serializer.data)
     
