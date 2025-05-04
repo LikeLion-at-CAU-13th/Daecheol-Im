@@ -10,8 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
-from pathlib import Path
-# ÆÄÀÏÀ» ÀĞ±â À§ÇØ ÇÊ¿äÇÑ ¶óÀÌºê·¯¸®¸¦ ¼³Ä¡ÇÕ´Ï´Ù.
+# íŒŒì¼ì„ ì½ê¸° ìœ„í•´ í•„ìš”í•œ ë¼ì´ë¸ŒëŸ¬ë¦¬ë¥¼ ì„¤ì¹˜í•©ë‹ˆë‹¤.
 from pathlib import Path
 import os, json
 from django.core.exceptions import ImproperlyConfigured
@@ -29,7 +28,7 @@ with open(secret_file) as f:
     secrets = json.loads(f.read())
 
 def get_secret(setting, secrets=secrets): 
-# secret º¯¼ö¸¦ °¡Á®¿À°Å³ª ±×·¸Áö ¸ø ÇÏ¸é ¿¹¿Ü¸¦ ¹İÈ¯
+# secret ë³€ìˆ˜ë¥¼ ê°€ì ¸ì˜¤ê±°ë‚˜ ê·¸ë ‡ì§€ ëª» í•˜ë©´ ì˜ˆì™¸ë¥¼ ë°˜í™˜
     try:
         return secrets[setting]
     except KeyError:
@@ -37,7 +36,6 @@ def get_secret(setting, secrets=secrets):
         raise ImproperlyConfigured(error_msg)
 
 SECRET_KEY = get_secret("SECRET_KEY")
-
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -65,17 +63,13 @@ PROJECT_APPS = [
 
 THIRD_PARTY_APPS = [
     "corsheaders",
-    "rest_framework",
 ]
-
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware', # ¹İµå½Ã °¡Àå À§ÂÊ¿¡ Ãß°¡
-    'posts.logging_middleware.RequestLoggingMiddleware',
-    #±âº» ¹Ìµé¿ş¾î
-    'django.middleware.security.SecurityMiddleware', 
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -159,61 +153,18 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'accounts.User'
 
-# ÀÎÁõ °ü·Ã ¿äÃ»(ÄíÅ°, ¼¼¼Ç µî)À» Çã¿ë
-# ¿¹¸¦ µé¾î ºê¶ó¿ìÀú°¡ ¹é¿£µå ¼­¹ö·Î ÄíÅ°¸¦ Àü¼ÛÇÏ°Å³ª, ¹é¿£µå¿¡¼­ ÄíÅ°¸¦ ÀÀ´äÀ¸·Î º¸³¾ ¼ö ÀÖÀ½
+# ì¸ì¦ ê´€ë ¨ ìš”ì²­(ì¿ í‚¤, ì„¸ì…˜ ë“±)ì„ í—ˆìš©
+# ì˜ˆë¥¼ ë“¤ì–´ ë¸Œë¼ìš°ì €ê°€ ë°±ì—”ë“œ ì„œë²„ë¡œ ì¿ í‚¤ë¥¼ ì „ì†¡í•˜ê±°ë‚˜, ë°±ì—”ë“œì—ì„œ ì¿ í‚¤ë¥¼ ì‘ë‹µìœ¼ë¡œ ë³´ë‚¼ ìˆ˜ ìˆìŒ
 CORS_ALLOW_CREDENTIALS = True
 
-# ¼­¹ö·Î ¿äÃ» º¸³¾ ¼ö ÀÖ´Â µµ¸ŞÀÎµé Á¤ÀÇ
-# ¿©±â¿¡¼­ÀÇ localhost´Â EC2 ÀÎ½ºÅÏ½ºÀÇ ·ÎÄÃÈ¯°æÀÌ ¾Æ´Ï¶ó ÇÁ·ĞÆ®¿£µå °³¹ß ·ÎÄÃ È¯°æ ÀÇ¹Ì
-# 3000 Æ÷Æ®´Â ÇÁ·ĞÆ®¿£µå React ¾ÖÇÃ¸®ÄÉÀÌ¼ÇÀÇ Æ÷Æ® ¹øÈ£
-# ÃßÈÄ ÇÁ·ĞÆ®¿£µå¿¡¼­ À¥ ÆäÀÌÁö ¹èÆ÷ ÈÄ µµ¸ŞÀÎ ¸ÅÇÎÇß´Ù¸é ÇØ´ç µµ¸ŞÀÎ Ãß°¡ ÇÊ¿ä
+# ì„œë²„ë¡œ ìš”ì²­ ë³´ë‚¼ ìˆ˜ ìˆëŠ” ë„ë©”ì¸ë“¤ ì •ì˜
+# ì—¬ê¸°ì—ì„œì˜ localhostëŠ” EC2 ì¸ìŠ¤í„´ìŠ¤ì˜ ë¡œì»¬í™˜ê²½ì´ ì•„ë‹ˆë¼ í”„ë¡ íŠ¸ì—”ë“œ ê°œë°œ ë¡œì»¬ í™˜ê²½ ì˜ë¯¸
+# 3000 í¬íŠ¸ëŠ” í”„ë¡ íŠ¸ì—”ë“œ React ì• í”Œë¦¬ì¼€ì´ì…˜ì˜ í¬íŠ¸ ë²ˆí˜¸
+# ì¶”í›„ í”„ë¡ íŠ¸ì—”ë“œì—ì„œ ì›¹ í˜ì´ì§€ ë°°í¬ í›„ ë„ë©”ì¸ ë§¤í•‘í–ˆë‹¤ë©´ í•´ë‹¹ ë„ë©”ì¸ ì¶”ê°€ í•„ìš”
 CORS_ALLOWED_ORIGINS = [ 
     "http://localhost:3000",
     "http://127.0.0.1:3000",
+    "http://127.0.0.1:5500", # ë¡œì»¬ ê°œë°œìš©
+    "http://gun587330.github.io", # GitHub Pages ë°°í¬ìš©
+    "http://guesthouse.o-r.kr",
 ]
-
-# ·Î±× ±â·Ï
-
-LOG_DIR = os.path.join(BASE_DIR, 'logs') # ·Î±× ÆÄÀÏÀ» ÀúÀåÇÒ µğ·ºÅä¸®¸¦ BASE_DIR/logs·Î ¼³Á¤
-os.makedirs(LOG_DIR, exist_ok=True) # logs Æú´õ°¡ ¾øÀ¸¸é ÀÚµ¿ »ı¼º
-
-LOGGING = {
-    'version' : 1,
-    'disable_existing_loggers': False,
-    'formatters' : {
-        'standard' : {
-            'format' : '[{asctime}] {levelname} {message}',
-            'style' : '{',
-        },
-        'detailed': {
-            'format': '[{asctime}] {levelname} {name} {message}',
-            'style': '{',
-        },
-    },
-    'handlers': {
-        'file_all': {
-            'level': 'INFO',
-            'class': 'logging.FileHandler',
-            'filename': os.path.join(LOG_DIR, 'all_requests.log'),
-            'formatter': 'standard',
-        },
-        'file_errors': {
-            'level': 'WARNING',
-            'class': 'logging.FileHandler',
-            'filename': os.path.join(LOG_DIR, 'errors.log'),
-            'formatter': 'detailed',
-        },
-    },
-    'loggers': {
-        'django.request': {
-            'handlers': ['file_all', 'file_errors'],
-            'level': 'INFO',
-            'propagate': False,
-        },
-        'django': {
-            'handlers': ['file_all', 'file_errors'],
-            'level': 'INFO',
-            'propagate': False,
-        },   
-    },
-}
