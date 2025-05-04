@@ -62,7 +62,7 @@ def posts_by_category(request, category_id):# 인자로 카테고리의 id를 �
         'data': post_json_list
     })
 
-    
+    #게시글 일부 조회
 def get_post_detail(reqeust, id):
     post = get_object_or_404(Post, pk=id)
     post_detail_json = {
@@ -77,6 +77,7 @@ def get_post_detail(reqeust, id):
         "status" : 200,
         "data": post_detail_json})
 
+# 게시글 생성 및 게시글 모두 조회
 @require_http_methods(["POST", "GET"])
 def post_list(request):
     
