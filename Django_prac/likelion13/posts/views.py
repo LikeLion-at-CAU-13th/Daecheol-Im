@@ -207,6 +207,8 @@ def post_detail(request, post_id):
 # 클래스형 뷰(CBV)로 구현
 # APIView를 사용하기 위해 import
 class PostList(APIView):
+    permission_classes = [TimeAndOwnerPermission]
+
     def post(self, request, format=None):
         serializer = PostSerializer(data=request.data)
         if serializer.is_valid():
@@ -247,6 +249,7 @@ class PostDetail(APIView):
 
 # 해당 게시글에 달린 댓글 모두 조회
 class CommentList(APIView):
+    permission_classes = [TimeAndOwnerPermission]
     def get(self, request, post_id): # HTTP GEt 요청이 들어왔을 때 실행되는 메서드
         post = get_object_or_404(Post, pk=post_id) # Post 클래스에서 pk가 입력받은 인자와 같은 객체를 post에 담음
         comments = Comment.objects.filter(post = post) # Comment의 객체중 post_id가 입력받은 인자와 같은 객체들을 comments에 담음
