@@ -13,6 +13,10 @@ from rest_framework import status
 from django.http import Http404
 from .serializers import PostSerializer, CommentSerializer
 
+#인가
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from config.permissions import TimeAndOwnerPermission
+
 # 함수형 뷰(FBV)로 구현
 # 게시글에 달린 댓글 모두 불러오기
 '''@require_http_methods(["GET"])
@@ -219,6 +223,8 @@ class PostList(APIView):
 
 # 게시글 하나 불러오기
 class PostDetail(APIView):
+    permission_classes = [TimeAndOwnerPermission]
+
     def get(self, request, post_id):
         post = get_object_or_404(Post, id=post_id)
         serializer = PostSerializer(post)
