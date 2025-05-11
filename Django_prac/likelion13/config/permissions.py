@@ -2,31 +2,31 @@ from rest_framework.permissions import BasePermission, SAFE_METHODS
 from datetime import datetime
 import pytz
 
-#¹ã 10½Ã ~ ¾ÆÄ§ 7½Ã »çÀÌ¿¡´Â Á¢±Ù ±ÝÁö
+#ë°¤ 10ì‹œ ~ ì•„ì¹¨ 7ì‹œ ì‚¬ì´ì—ëŠ” ì ‘ê·¼ ê¸ˆì§€
 class TimeRestrictedPermission(BasePermission):
     def has_permission(self, request, view):
         kst = pytz.timezone('Asia/Seoul')
-        # ÇÑ±¹½Ã°£À¸·Î º¸Á¤
+        # í•œêµ­ì‹œê°„ìœ¼ë¡œ ë³´ì •
         now = datetime.now(kst).time()
-        # datetime.now().time() -> ½Ã°£ °´Ã¼¸¸ ÃßÃâ ex) 14:28:00
+        # datetime.now().time() -> ì‹œê°„ ê°ì²´ë§Œ ì¶”ì¶œ ex) 14:28:00
         if now.hour >= 22 or now.hour < 7:
             return False
-        return True # ÀÌ¿Ü ½Ã°£ÀÌ¸é Á¢±Ù Çã¿ë
+        return True # ì´ì™¸ ì‹œê°„ì´ë©´ ì ‘ê·¼ í—ˆìš©
 
-#ÀÛ¼ºÀÚ¸¸ ¼öÁ¤/»èÁ¦ °¡´É, ±× ¿Ü´Â ÀÐ±â¸¸ °¡´É
+#ìž‘ì„±ìžë§Œ ìˆ˜ì •/ì‚­ì œ ê°€ëŠ¥, ê·¸ ì™¸ëŠ” ì½ê¸°ë§Œ ê°€ëŠ¥
 class IsOwnerOrReadOnly(BasePermission):
     def has_object_permission(self, request, view, obj):
-        # SAFE_METHODS¿¡ ÇØ´çÇÏ´Â ¿äÃ»ÀÌ¸é ±ÇÇÑ Çã¿ë
+        # SAFE_METHODSì— í•´ë‹¹í•˜ëŠ” ìš”ì²­ì´ë©´ ê¶Œí•œ í—ˆìš©
         if request.method in SAFE_METHODS:
             return True
-        # ÀÌ¿ÜÀÇ ¿äÃ»Àº ÀÛ¼ºÀÚ¸¸ ±ÇÇÑ Çã¿ë
+        # ì´ì™¸ì˜ ìš”ì²­ì€ ìž‘ì„±ìžë§Œ ê¶Œí•œ í—ˆìš©
         return obj.user == request.user
     
 class TimeAndOwnerPermission(TimeRestrictedPermission, IsOwnerOrReadOnly):
     def has_permission(self, request, view):
-        # TimeRestrictedPermissionÀÇ has_permissionÀ» »ç¿ë
+        # TimeRestrictedPermissionì˜ has_permissionì„ ì‚¬ìš©
         return TimeRestrictedPermission().has_permission(request, view)
 
     def has_object_permission(self, request, view, obj):
-        # IsOwnerOrReadOnlyÀÇ has_object_permissionÀ» »ç¿ë
+        # IsOwnerOrReadOnlyì˜ has_object_permissionì„ ì‚¬ìš©
         return IsOwnerOrReadOnly().has_object_permission(request, view, obj)
