@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
-# ÆÄÀÏÀ» ÀĞ±â À§ÇØ ÇÊ¿äÇÑ ¶óÀÌºê·¯¸®¸¦ ¼³Ä¡ÇÕ´Ï´Ù.
+# íŒŒì¼ì„ ì½ê¸° ìœ„í•´ í•„ìš”í•œ ë¼ì´ë¸ŒëŸ¬ë¦¬ë¥¼ ì„¤ì¹˜í•©ë‹ˆë‹¤.
 from pathlib import Path
 import os, json
 from django.core.exceptions import ImproperlyConfigured
@@ -34,7 +34,7 @@ with open(secret_file) as f:
     secrets = json.loads(f.read())
 
 def get_secret(setting, secrets=secrets): 
-# secret º¯¼ö¸¦ °¡Á®¿À°Å³ª ±×·¸Áö ¸ø ÇÏ¸é ¿¹¿Ü¸¦ ¹İÈ¯
+# secret ë³€ìˆ˜ë¥¼ ê°€ì ¸ì˜¤ê±°ë‚˜ ê·¸ë ‡ì§€ ëª» í•˜ë©´ ì˜ˆì™¸ë¥¼ ë°˜í™˜
     try:
         return secrets[setting]
     except KeyError:
@@ -78,12 +78,12 @@ THIRD_PARTY_APPS = [
     "allauth.account",
     "allauth.socialaccount",
     "allauth.socialaccount.providers.google",
-    # "allauth.socialaccount.providers.{Á¦°ø_¾÷Ã¼}" Ã£¾Æ¼­ »ç¿ë °¡´É
+    # "allauth.socialaccount.providers.{ì œê³µ_ì—…ì²´}" ì°¾ì•„ì„œ ì‚¬ìš© ê°€ëŠ¥
 ]
 
 ###AWS###
-AWS_ACCESS_KEY_ID = get_secret("AWS_ACCESS_KEY_ID") # .csv ÆÄÀÏ¿¡ ÀÖ´Â ³»¿ëÀ» ÀÔ·Â Access key ID. IAM °èÁ¤ °ü·Ã
-AWS_SECRET_ACCESS_KEY = get_secret("AWS_SECRET_ACCESS_KEY") # .csv ÆÄÀÏ¿¡ ÀÖ´Â ³»¿ëÀ» ÀÔ·Â Secret access key. IAM °èÁ¤ °ü·Ã
+AWS_ACCESS_KEY_ID = get_secret("AWS_ACCESS_KEY_ID") # .csv íŒŒì¼ì— ìˆëŠ” ë‚´ìš©ì„ ì…ë ¥ Access key ID. IAM ê³„ì • ê´€ë ¨
+AWS_SECRET_ACCESS_KEY = get_secret("AWS_SECRET_ACCESS_KEY") # .csv íŒŒì¼ì— ìˆëŠ” ë‚´ìš©ì„ ì…ë ¥ Secret access key. IAM ê³„ì • ê´€ë ¨
 AWS_REGION = 'ap-northeast-2'
 
 ###S3###
@@ -97,10 +97,10 @@ AWS_S3_OBJECT_PARAMETERS = {
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware', # ¹İµå½Ã °¡Àå À§ÂÊ¿¡ Ãß°¡
+    'corsheaders.middleware.CorsMiddleware', # ë°˜ë“œì‹œ ê°€ì¥ ìœ„ìª½ì— ì¶”ê°€
     'posts.logging_middleware.RequestLoggingMiddleware',
     "allauth.account.middleware.AccountMiddleware", 
-    #±âº» ¹Ìµé¿ş¾î
+    #ê¸°ë³¸ ë¯¸ë“¤ì›¨ì–´
     'django.middleware.security.SecurityMiddleware', 
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -110,9 +110,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# django-allauth ¶óÀÌºê·¯¸®¿¡¼­ »ç¿ëÇÏ´Â ¿É¼Ç
-ACCOUNT_LOGIN_METHODS = {'email'}                  # ·Î±×ÀÎ ¹æ½Ä ¼³Á¤
-ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*']    # È¸¿ø°¡ÀÔ ½Ã ÇÊ¼ö ÀÔ·Â ÇÊµå ¼³Á¤
+# django-allauth ë¼ì´ë¸ŒëŸ¬ë¦¬ì—ì„œ ì‚¬ìš©í•˜ëŠ” ì˜µì…˜
+ACCOUNT_LOGIN_METHODS = {'email'}                  # ë¡œê·¸ì¸ ë°©ì‹ ì„¤ì •
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*']    # íšŒì›ê°€ì… ì‹œ í•„ìˆ˜ ì…ë ¥ í•„ë“œ ì„¤ì •
 
 ROOT_URLCONF = 'config.urls'
 
@@ -189,23 +189,23 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'accounts.User'
 
-# ÀÎÁõ °ü·Ã ¿äÃ»(ÄíÅ°, ¼¼¼Ç µî)À» Çã¿ë
-# ¿¹¸¦ µé¾î ºê¶ó¿ìÀú°¡ ¹é¿£µå ¼­¹ö·Î ÄíÅ°¸¦ Àü¼ÛÇÏ°Å³ª, ¹é¿£µå¿¡¼­ ÄíÅ°¸¦ ÀÀ´äÀ¸·Î º¸³¾ ¼ö ÀÖÀ½
+# ì¸ì¦ ê´€ë ¨ ìš”ì²­(ì¿ í‚¤, ì„¸ì…˜ ë“±)ì„ í—ˆìš©
+# ì˜ˆë¥¼ ë“¤ì–´ ë¸Œë¼ìš°ì €ê°€ ë°±ì—”ë“œ ì„œë²„ë¡œ ì¿ í‚¤ë¥¼ ì „ì†¡í•˜ê±°ë‚˜, ë°±ì—”ë“œì—ì„œ ì¿ í‚¤ë¥¼ ì‘ë‹µìœ¼ë¡œ ë³´ë‚¼ ìˆ˜ ìˆìŒ
 CORS_ALLOW_CREDENTIALS = True
 
-# ¼­¹ö·Î ¿äÃ» º¸³¾ ¼ö ÀÖ´Â µµ¸ŞÀÎµé Á¤ÀÇ
-# ¿©±â¿¡¼­ÀÇ localhost´Â EC2 ÀÎ½ºÅÏ½ºÀÇ ·ÎÄÃÈ¯°æÀÌ ¾Æ´Ï¶ó ÇÁ·ĞÆ®¿£µå °³¹ß ·ÎÄÃ È¯°æ ÀÇ¹Ì
-# 3000 Æ÷Æ®´Â ÇÁ·ĞÆ®¿£µå React ¾ÖÇÃ¸®ÄÉÀÌ¼ÇÀÇ Æ÷Æ® ¹øÈ£
-# ÃßÈÄ ÇÁ·ĞÆ®¿£µå¿¡¼­ À¥ ÆäÀÌÁö ¹èÆ÷ ÈÄ µµ¸ŞÀÎ ¸ÅÇÎÇß´Ù¸é ÇØ´ç µµ¸ŞÀÎ Ãß°¡ ÇÊ¿ä
+# ì„œë²„ë¡œ ìš”ì²­ ë³´ë‚¼ ìˆ˜ ìˆëŠ” ë„ë©”ì¸ë“¤ ì •ì˜
+# ì—¬ê¸°ì—ì„œì˜ localhostëŠ” EC2 ì¸ìŠ¤í„´ìŠ¤ì˜ ë¡œì»¬í™˜ê²½ì´ ì•„ë‹ˆë¼ í”„ë¡ íŠ¸ì—”ë“œ ê°œë°œ ë¡œì»¬ í™˜ê²½ ì˜ë¯¸
+# 3000 í¬íŠ¸ëŠ” í”„ë¡ íŠ¸ì—”ë“œ React ì• í”Œë¦¬ì¼€ì´ì…˜ì˜ í¬íŠ¸ ë²ˆí˜¸
+# ì¶”í›„ í”„ë¡ íŠ¸ì—”ë“œì—ì„œ ì›¹ í˜ì´ì§€ ë°°í¬ í›„ ë„ë©”ì¸ ë§¤í•‘í–ˆë‹¤ë©´ í•´ë‹¹ ë„ë©”ì¸ ì¶”ê°€ í•„ìš”
 CORS_ALLOWED_ORIGINS = [ 
     "http://localhost:3000",
     "http://127.0.0.1:3000",
 ]
 
-# ·Î±× ±â·Ï
+# ë¡œê·¸ ê¸°ë¡
 
-LOG_DIR = os.path.join(BASE_DIR, 'logs') # ·Î±× ÆÄÀÏÀ» ÀúÀåÇÒ µğ·ºÅä¸®¸¦ BASE_DIR/logs·Î ¼³Á¤
-os.makedirs(LOG_DIR, exist_ok=True) # logs Æú´õ°¡ ¾øÀ¸¸é ÀÚµ¿ »ı¼º
+LOG_DIR = os.path.join(BASE_DIR, 'logs') # ë¡œê·¸ íŒŒì¼ì„ ì €ì¥í•  ë””ë ‰í† ë¦¬ë¥¼ BASE_DIR/logsë¡œ ì„¤ì •
+os.makedirs(LOG_DIR, exist_ok=True) # logs í´ë”ê°€ ì—†ìœ¼ë©´ ìë™ ìƒì„±
 
 LOGGING = {
     'version' : 1,
@@ -259,8 +259,8 @@ REST_FRAMEWORK = {
 REST_USE_JWT = True
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(hours=3),    # À¯È¿±â°£ 3½Ã°£
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),    # À¯È¿±â°£ 7ÀÏ
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=3),    # ìœ íš¨ê¸°ê°„ 3ì‹œê°„
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),    # ìœ íš¨ê¸°ê°„ 7ì¼
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': False,
     'TOKEN_USER_CLASS': 'accounts.User',
@@ -272,21 +272,21 @@ DB_PW = get_secret("DB_PW")
 #	'default': {
 #		'ENGINE': 'django.db.backends.mysql',
 #		'NAME': "likelion13th",
-#		'USER': "root", # root·Î Á¢¼ÓÇÏ¿© DB¸¦ ¸¸µé¾ú´Ù¸é 'root'
-#		'PASSWORD': DB_PW, # ºñ¹Ğ¹øÈ£´Â secrets.json¿¡ ÀúÀå
+#		'USER': "root", # rootë¡œ ì ‘ì†í•˜ì—¬ DBë¥¼ ë§Œë“¤ì—ˆë‹¤ë©´ 'root'
+#		'PASSWORD': DB_PW, # ë¹„ë°€ë²ˆí˜¸ëŠ” secrets.jsonì— ì €ì¥
 #		'HOST': 'localhost',
 #		'PORT': '3306',
 #	}
 #}
 
-# ¿ø°İ ¿¬°á¿ë
+# ì›ê²© ì—°ê²°ìš©
 DATABASES = {
 	'default': {
 		'ENGINE': 'django.db.backends.mysql',
 		'NAME': "likelion13th",
-		'USER': "admin", # aws¿¡¼­ ¸¸µç »ç¿ëÀÚ¸í
-		'PASSWORD': DB_PW, # ºñ¹Ğ¹øÈ£´Â secrets.json¿¡ ÀúÀå
+		'USER': "admin", # awsì—ì„œ ë§Œë“  ì‚¬ìš©ìëª…
+		'PASSWORD': DB_PW, # ë¹„ë°€ë²ˆí˜¸ëŠ” secrets.jsonì— ì €ì¥
 		'HOST': "127.0.0.1",
-		'PORT': '3307', # ÅÍ³Î¿¡¼­ ¿¬°áÇÒ ·ÎÄÃ Æ÷Æ®
+		'PORT': '3307', # í„°ë„ì—ì„œ ì—°ê²°í•  ë¡œì»¬ í¬íŠ¸
 	}
 }
