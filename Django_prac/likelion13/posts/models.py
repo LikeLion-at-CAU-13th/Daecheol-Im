@@ -48,3 +48,11 @@ class Comment(BaseModel):
 
     def __str__(self):
         return f'{self.author_name} - {self.content[:20]}' # 작성자 이름과 댓글 내용 일부 보여줌
+    
+# S3
+class Image(BaseModel):
+    id = models.AutoField(primary_key=True)
+    image_url = models.URLField(max_length=500)  # S3에 업로드된 이미지의 URL 저장
+
+    def __str__(self):
+        return f"Image {self.id}"

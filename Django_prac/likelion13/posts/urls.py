@@ -14,4 +14,7 @@ urlpatterns = [
     path('', PostList.as_view()), # post 전체 조회
     path('<int:post_id>/', PostDetail.as_view()), # post 개별 조회
     path('<int:post_id>/comments/', CommentList.as_view()), # 해당 게시글의 모든 댓글 조회
+    
+    #S3
+    path('upload/', ImageUploadView.as_view(), name='image-upload')
 ]
