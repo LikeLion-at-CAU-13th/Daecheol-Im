@@ -2,21 +2,27 @@
 
 from rest_framework import serializers
 from .models import Post, Comment
+from .models import Image
 
 class PostSerializer(serializers.ModelSerializer):
-
   class Meta:
-		# ¾î¶² ¸ğµ¨À» ½Ã¸®¾ó¶óÀÌÁîÇÒ °ÇÁö
+		# ì–´ë–¤ ëª¨ë¸ì„ ì‹œë¦¬ì–¼ë¼ì´ì¦ˆí•  ê±´ì§€
     model = Post
-		# ¸ğµ¨¿¡¼­ ¾î¶² ÇÊµå¸¦ °¡Á®¿ÃÁö
-		# ÀüºÎ °¡Á®¿À°í ½ÍÀ» ¶§
+		# ëª¨ë¸ì—ì„œ ì–´ë–¤ í•„ë“œë¥¼ ê°€ì ¸ì˜¬ì§€
+		# ì „ë¶€ ê°€ì ¸ì˜¤ê³  ì‹¶ì„ ë•Œ
     fields = "__all__"
 
 class CommentSerializer(serializers.ModelSerializer):
 
   class Meta:
-		# ¾î¶² ¸ğµ¨À» ½Ã¸®¾ó¶óÀÌÁîÇÒ °ÇÁö
+		# ì–´ë–¤ ëª¨ë¸ì„ ì‹œë¦¬ì–¼ë¼ì´ì¦ˆí•  ê±´ì§€
     model = Comment
-		# ¸ğµ¨¿¡¼­ ¾î¶² ÇÊµå¸¦ °¡Á®¿ÃÁö
-		# ÀüºÎ °¡Á®¿À°í ½ÍÀ» ¶§
+		# ëª¨ë¸ì—ì„œ ì–´ë–¤ í•„ë“œë¥¼ ê°€ì ¸ì˜¬ì§€
+		# ì „ë¶€ ê°€ì ¸ì˜¤ê³  ì‹¶ì„ ë•Œ
     fields = "__all__"
+
+#S3
+class ImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Image
+        fields = "__all__"
