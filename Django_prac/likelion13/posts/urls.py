@@ -12,6 +12,15 @@ urlpatterns = [
     
     #클래스 기반 뷰(CBV)
     path('', PostList.as_view()), # post 전체 조회
-    path('<int:post_id>/', PostDetail.as_view()), # post 개별 조회
+    path('<int:post_id>/', PostDetail.as_view()), # post 개별 조회 
     path('<int:post_id>/comments/', CommentList.as_view()), # 해당 게시글의 모든 댓글 조회
+    
+    #S3
+    path('upload/', ImageUploadView.as_view(), name='image-upload'),
+
+    #14주차 예외처리
+    #path('<int:id>/', get_post_detail)
+
+    #댓글생성
+    path('<int:post_id>/comments/create/', CommentCreate.as_view(), name='comment-create'),  # POST 요청시
 ]

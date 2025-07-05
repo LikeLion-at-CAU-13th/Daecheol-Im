@@ -1,22 +1,65 @@
 ### Model Serializer case
-
 from rest_framework import serializers
-from .models import Post, Comment
+from .models import Post, Comment, User
+from .models import Image
+
+#14ì£¼ì°¨
+from config.custom_api_exceptions import PostConflictException
 
 class PostSerializer(serializers.ModelSerializer):
-
   class Meta:
-		# ¾î¶² ¸ğµ¨À» ½Ã¸®¾ó¶óÀÌÁîÇÒ °ÇÁö
+		# ì–´ë–¤ ëª¨ë¸ì„ ì‹œë¦¬ì–¼ë¼ì´ì¦ˆí•  ê±´ì§€
     model = Post
-		# ¸ğµ¨¿¡¼­ ¾î¶² ÇÊµå¸¦ °¡Á®¿ÃÁö
-		# ÀüºÎ °¡Á®¿À°í ½ÍÀ» ¶§
+		# ëª¨ë¸ì—ì„œ ì–´ë–¤ í•„ë“œë¥¼ ê°€ì ¸ì˜¬ì§€
+		# ì „ë¶€ ê°€ì ¸ì˜¤ê³  ì‹¶ì„ ë•Œ
     fields = "__all__"
+  
+  # 14ì£¼ì°¨ ì¤‘ë³µëœ ê²Œì‹œê¸€ ì œëª©ì´ ìˆë‹¤ë©´ ì˜ˆì™¸ ë°œìƒ
+  def validate(self, data):
+    from datetime import datetime, time
+    from django.utils import timezone
+
+    user = data.get('user')
+
+    # userê°€ ID(int)ì¼ ê²½ìš° User ê°ì²´ë¡œ ë³€í™˜
+    if isinstance(user, int):
+        user = User.objects.get(pk=user)
+    elif not isinstance(user, User):
+        raise serializers.ValidationError("ìœ íš¨í•˜ì§€ ì•Šì€ ì‚¬ìš©ìì…ë‹ˆë‹¤.")
+
+    now = timezone.now()
+    start = timezone.make_aware(datetime.combine(now.date(), time.min))
+    end = timezone.make_aware(datetime.combine(now.date(), time.max))
+
+    # ì¤‘ë³µ ì œëª© ê²€ì‚¬
+    if Post.objects.filter(title=data['title']).exists():
+        raise PostConflictException(detail=f"A post with title: '{data['title']}' already exists.")
+
+    # í•˜ë£¨ 1ê°œ ì œí•œ
+    post_count_today = Post.objects.filter(user=user, created__range=(start, end)).count()
+    if post_count_today >= 1:
+        raise serializers.ValidationError("í•˜ë£¨ì— í•˜ë‚˜ë§Œ ê²Œì‹œê¸€ì„ ì‘ì„±í•  ìˆ˜ ìˆìŠµë‹ˆë‹¤.")
+
+    data['user'] = user  # ê°ì²´ë¡œ ì„¤ì •
+
+    return data
 
 class CommentSerializer(serializers.ModelSerializer):
 
   class Meta:
-		# ¾î¶² ¸ğµ¨À» ½Ã¸®¾ó¶óÀÌÁîÇÒ °ÇÁö
+		# ì–´ë–¤ ëª¨ë¸ì„ ì‹œë¦¬ì–¼ë¼ì´ì¦ˆí•  ê±´ì§€
     model = Comment
-		# ¸ğµ¨¿¡¼­ ¾î¶² ÇÊµå¸¦ °¡Á®¿ÃÁö
-		# ÀüºÎ °¡Á®¿À°í ½ÍÀ» ¶§
+		# ëª¨ë¸ì—ì„œ ì–´ë–¤ í•„ë“œë¥¼ ê°€ì ¸ì˜¬ì§€
+		# ì „ë¶€ ê°€ì ¸ì˜¤ê³  ì‹¶ì„ ë•Œ
     fields = "__all__"
+
+  def validate_content(self, value):
+        if len(value.strip()) < 15:
+            raise serializers.ValidationError("ëŒ“ê¸€ì€ ìµœì†Œ 15ì ì´ìƒ ì‘ì„±í•´ì£¼ì„¸ìš”.")
+        return value
+
+#S3
+class ImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Image
+        fields = "__all__"
