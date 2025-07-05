@@ -21,7 +21,7 @@ def _create_unified_response(response):
         }
     }
 
-    # field_details°¡ ÀÖ´Ù¸é Ãß°¡
+    # field_detailsê°€ ìžˆë‹¤ë©´ ì¶”ê°€
     if 'field_details' in error_detail:
         error_response['error']['field_details'] = error_detail['field_details']
 
